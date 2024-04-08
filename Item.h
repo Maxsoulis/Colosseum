@@ -7,8 +7,9 @@ using std::cout;
 class Item{
   public:
   string name;
-  int attack, health, defense;
-  Item(string = " ", int = 0, int = 0, int = 0);
+  int attack, health, defense, price, maxDropAmount;
+  Item(string = " ", int = 0, int = 0, int = 0, int = 0, int = 0);
   void printStats();
 };
 #endif
+
