@@ -22,7 +22,7 @@ void Player::sellItem(int numItems, Item itemToSell){
       if(copyOfItem.getName() == nameOfItemToDelete){
        money += copyOfItem.getItemPrice();
         inventory.erase(inventory.begin() + itemPosition);
-      return;
+      break;
       }
       itemPosition++;
       iterator++;
