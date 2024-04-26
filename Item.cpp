@@ -1,11 +1,7 @@
 #include "Item.h"
-Item::Item(string n, int h, int a, int d, int p,int mDA  ){
-  name = n;
-  health = h;
-  attack = a;
-  defense = d;
+Item::Item(string n, int h, int a, int d, int p, int q  ): GameCharacter(n, h, a, d) {
   price = p;
-  maxDropAmount = mDA;
+  quantity = q;
 }
 void Item::printStats(){
   cout << name << '\n';
@@ -13,3 +9,18 @@ void Item::printStats(){
   cout << "Increases attack by " << attack << " points" << '\n';
   cout << "Increases defense by " << defense << " points" << '\n';
 }
+ 
+void Item::setNewItemPrice(int newItemPrice){
+  price = newItemPrice;
+}
+int Item::getItemPrice(){
+  return price;
+}
+int Item::getQuantity(){
+  return quantity;
+}
+void Item::updateQuantity( int q){
+  quantity = q;
+}
+ 
+ 
