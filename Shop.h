@@ -6,14 +6,20 @@
 #include <vector>
 using std::vector;
 class Shop{
-  public:
-      vector<Item> items;
+  private:
+      vector<Item> foodItems;
+      vector<Item> weapons;
+      vector<Item> armor;
+      vector<Item> potions;
       vector<string> dialogueOptions;
-      Shop(vector<Item>);
+      vector<Item> specialItems;
+      Item item;
+      public:
+      string alphabet;
+      Shop(vector<Item>, vector<Item>, vector<Item>, vector<Item>, vector<Item>);
       void introduceShop();
       string shopDialogue();
       void shopMenu();
-      void printActions();
       void presentItems(vector<Item>); 
 };
 #endif
