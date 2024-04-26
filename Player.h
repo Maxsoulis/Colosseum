@@ -6,12 +6,15 @@ class Player : public GameCharacter{
  private:
  string name;
  int health, attack, defense, money;
- vector<Item> inventory;
  Item copyOfItem;
  public:
- Player(string, int, int, int, int,  vector<Item> );
- void addItem(Item);
- void buyItem(int, Item);
- void sellItem(int, Item);
+ vector<Item> inventory;
+ Player(string = "", int = 0, int = 0, int = 0, int = 0,  vector<Item> = vector<Item>() );
+ void removeItem(Item &);
+ void addItem(Item&);
+ void buyItem(int, Item&);
+ void sellItem(int, Item&);
+ int getMoney();
+ void setNewMoney(int);
 };
 #endif
