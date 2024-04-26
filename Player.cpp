@@ -1,4 +1,4 @@
-#include "Player.hpp"
+#include "Player.h"
 Player::Player(string n, int h, int a, int d, int m, vector<Item> in ): GameCharacter(n, h, a, d){
   money = m;
   inventory = in;
