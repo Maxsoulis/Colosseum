@@ -51,7 +51,7 @@ void Player::addItem(Item &item){
  
    
 }
-void Player::buyItem(int numItems,Item itemToBuy){
+void Player::buyItem(int numItems,Item &itemToBuy){
 
   int cost = itemToBuy.getItemPrice() * numItems;
   money -= cost;
@@ -70,11 +70,6 @@ void Player::sellItem(int numItems, Item &itemToSell){
     money -= numItems; 
      break;
     }
-    int a = 0;
-    for(int a = 0; a < 4; a++){
-      break;
-    }
-    a++;
     findItemToSell++;
   }
 }
