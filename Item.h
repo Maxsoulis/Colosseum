@@ -9,12 +9,15 @@ class Item : public GameCharacter{
   private:
   string name;
   int attack, health, defense, price, quantity;
+  bool isConsumable;
   public:
-  Item(string = " ", int = 0, int = 0, int = 0, int = 0, int = 0 );
+  Item(string = " ", int = 0, int = 0, int = 0, int = 0, int = 0, bool = false );
   void printStats();
   int getItemPrice();
   void setNewItemPrice(int);
   int getQuantity();
   void updateQuantity( int);
+  bool getIsConsumable();
+
 };
 #endif
