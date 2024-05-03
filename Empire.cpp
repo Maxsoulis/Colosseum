@@ -2,20 +2,21 @@
 Empire::Empire(Player p){
   player = p;
 }
-void printActions(int numActions, string actions[]){
+void Empire::printActions(int numActions, string actions[]){
   for(int i = 0; i < numActions; i++){
     cout << actions[i] <<'\n';
   }
 }
-void handleBuyingActions(Shop shop, vector<Item> itemsToBuy){
+void Empire::handleBuyingActions(Shop shop, vector<Item> itemsToBuy){
    shop.presentItems(itemsToBuy);
    int numOfItemsToBuy = itemsToBuy.size();
-   string input;
+   char input;
    bool valid = false;
    while(valid == false){
    cin >> input;
    for(int i = 0; i < numOfItemsToBuy; i++){
-    if(input == shop.alphabet[i]){
+    char alphabetLetter = shop.alphabet[i];
+    if(input == alphabetLetter){
       Item itemToAdd = itemsToBuy[i];
       player.addItem(itemToAdd);
       valid = true;
@@ -25,8 +26,8 @@ void handleBuyingActions(Shop shop, vector<Item> itemsToBuy){
    cout << "That is not a valid option, try again" << '\n';
    }
 }
-int performEndGameLogic(){
-  string actions = {"a. Yes", "b. No"};
+int Empire::performEndGameLogic(){
+  string actions[] = {"a. Yes", "b. No"};
   printActions(2, actions);
   string input;
   cin >> input;
@@ -42,77 +43,140 @@ int performEndGameLogic(){
     }
   }
 }
-void handleShopActions(Shop* shop){
-  shop->intruduceShop();
+void Empire::handleShopActions(Shop shop){
+  shop.introduceShop();
   string actions[] = {"a. Buy Food", "b.Buy Weapons", "c. Buy Armor","d. Buy Potions","e. Special Items" "f. Sell Items"};
   printActions(5, actions);
-  string menuShopActions;
+  char menuShopActions;
   cin >> menuShopActions;
   switch(menuShopActions){
-    case "a": {
-      shop-> presentItems(foodItem);
-      shop-> handleBuyingActions(foodItem);
+    case 'a': {
+      shop.presentItems(shop.foodItems);
+      handleBuyingActions(shop, shop.foodItems);
       break;
     }
-    case "b": {
-      shop-> presentItems(weapons);
-      shop -> handleBuyingActions(weapons);
+    case 'b': {
+      shop. presentItems(shop.weapons);
+      handleBuyingActions(shop, shop.weapons);
       break;
     }
-    case "c": {
-      shop-> presentItems(armor);
-      shop-> handleBuyingActions(armor);
+    case 'c': {
+      shop.presentItems(shop.armor);
+      handleBuyingActions(shop, shop.armor);
       break;
     }
-    case "d": {
-      shop-> presentItems(potions);
-      shop-> handleBuyingActions(potions);
+    case 'd': {
+      shop.presentItems(shop.potions);
+      handleBuyingActions(shop, shop.potions);
       break;
     }
-    case "e": {
-      shop-> presentItems(specialItems);
-      shop-> handleBuyingActions(specialItems);
+    case 'e': {
+      shop.presentItems(shop.specialItems);
+      handleBuyingActions(shop,shop.specialItems);
       break;
     }
-    case "f": {
-      cout << "Enter what Item you would like to sell" << '\n';
-      Item itemToSell;
-      int amountToSell, amountOfItem;
+    case 'f': {
+      cout << "Enter the item you want to sell" << '\n';
       string itemToSellName;
-      while (true){
+      auto it = player.inventory.begin();
+      while(it != player.inventory.end()){ 
+        cout << "Going through handleShopActions" << '\n';
+        bool foundItem = false;
         cin >> itemToSellName;
-        auto findItem = player.inventory. begin();
-        int amountOfItem, currentIndex;
-        bool itemNotFound = true;
-        while(findItem != player.inventory. end()){
-          Item currentItem = player.inventory[currentIndex];
-          // Sets a boolean value to false to be able to break out of the outer while loop and sets the itemToSell to the current item.
-          if(currentItem.getName() == itemToSellName){
-            itemToSell = currenItem;
-            itemNotFound = false;
-            amountOfItem++;
-          }
-          currentIndex++;
-          findItem++;
+        Item dummyItem = *it;
+        string dummyItemName = dummyItem.getName();
+        if(itemToSellName == dummyItemName){
+          player.sellItem(dummyItem);
+          foundItem = true;
+          break;
         }
-        if(itemNotFound){
-          cout << "You do not own any of that Item, try again" << '\n';
-        }
-        else break;
       }
-      cout << "Enter the amount of the item that you would like to sell" << '\n';
-      while (true){
-        cin >> amountToSell;
-        if(amountToSell > amountOfItem){
-          cout << "You do not have enough of those items to sell, try again" <<'\n';  
-        }
-        else break;  
+      
+    }
+}
+}
+void Empire::handleBattleActions(Enemy enemy){
+int extraDamage;
+while(true){
+string actions[] = {"a. Attack", "b. Use item", "c. Retreat"
+};
+printActions(3, actions);
+string battleInputs;
+cin >> battleInputs;
+if(battleInputs == "a" ){
+  int damage = player.getAttack() + extraDamage;
+  enemy.takeDamage(damage);
+  cout << "You did " << damage << " damage to the " << enemy.getName() << '\n';
+  cout << enemy.getName() << " has " << enemy.getCurrentHealth() << " hitpoints left" << '\n';
+  bool isDead = enemy.checkIsDead();
+  if(isDead){
+    cout << "You defeated the " << enemy.getName() << '\n';
+    return;
+  }
+  damage = enemy.getAttack();
+  player.takeDamage(damage);
+  cout<< "The enemy did" << damage << " hitpoints to you " << '\n';
+  isDead = player.checkIsDead();
+  cout << "You have " << player.getCurrentHealth() << " hitpoints left" << '\n';
+  extraDamage = 0;
+  if(isDead){
+    cout << "You died " << '\n';
+    return;
+  }
+}
+else if(battleInputs == "b"){
+  int numberOfItems;
+  auto findConsumableItems = player.inventory.begin();
+  while(findConsumableItems != player.inventory.end()){
+    Item item = *findConsumableItems;
+    if(item.getIsConsumable() == true){
+       item.printStats();
+  }
+cout << "What would you like to use" << '\n';
+string itemToUseName;
+while(true){
+  cin >> itemToUseName;
+  bool itemFound = player.findItem(dummyItem, itemToUseName);
+  if(itemFound){
+    player.removeItem(player.currentItem);
+    break;
+  }
+}
+  }
+}
+else{
+  return;
+}
+}
+}
+void Empire::handleColosseumActions(Colosseum colosseum){
+ 
+  string colosseumActions[] = {"a. Battle", "b. Exit"};
+  printActions(2, colosseumActions);
+  string colosseumInput;
+  cin >>  colosseumInput;
+  if(colosseumInput == "a"){
+    Enemy enemyToFight = colosseum.pickEnemy();
+    handleBattleActions(enemyToFight);
+    string afterBattleActions[] = { "a. Fight Again", "b. Exit"};
+    printActions(2, afterBattleActions);
+    char input;
+    while(true){
+      cin >>  input;
+      if(input == 'a'){
+        enemyToFight = colosseum.pickEnemy();
+        handleBattleActions(enemyToFight);
       }
-      player.sellItems(amountToSell, itemToSell);
-      break;
+      else if(input == 'b'){
+        return;
+      }
+      else {
+        cout << "That is not an option, try again" << '\n';
+      }
     }
-    default: {
-      cout << "That is not an option" <<'\n';
-    }
+    
+  }
+  else{
+    return;
   }
 }
