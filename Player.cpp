@@ -3,74 +3,87 @@ Player::Player(string n, int h, int a, int d, int m, vector<Item> in ): GameChar
   money = m;
   inventory = in;
 }
-void Player::removeItem(Item &item){
- auto findItem = inventory.begin();
- int itemPosition = 0;
- cout << "HEllo" << '\n';
- while(findItem != inventory.end()){
-    copyOfItem = *findItem;
-    if(copyOfItem.getName() == item.getName()){
-      cout << "removing " << '\n';
-      int amountOfItem = item.getQuantity();
-      amountOfItem -= 1;
-      item.updateQuantity(amountOfItem);
-      inventory.erase(inventory.begin() + itemPosition);
-      inventory.push_back(item);
-      break;
+bool Player::findItem(Item itemToFind, string itemName){
+  // sets current Item to a blank value
+  currentItem = dummyItem;
+  if(inventory.size() == 0){
+    return false;
+  }
+  auto findItem = inventory.begin();
+  itemPosition = 0;
+  // loops through the inventory and will check the item based on the inputted string or the actual item itself
+  while(findItem != inventory.end()){
+    currentItem = *findItem;
+    string currentItemName = currentItem.getName();
+    if(itemName.size() > 0){
+      if(currentItemName == itemName){
+        return true;
+      }
     }
-     itemPosition++;
-     findItem++;
- }
- 
+    else {
+      string itemToFindName = itemToFind.getName();
+      if(itemToFindName == currentItemName){
+        return true;
+      }
+    }
+    itemPosition++;
+    findItem++;
+  }
+  return false;
+}
+void Player::removeItem(Item &item){
+  findItem(item, "");
+  int amountOfItem = item.getQuantity();
+  if(amountOfItem == 1 ){
+  inventory.erase(inventory.begin() +  itemPosition );
+  }
+  else{
+  amountOfItem -= 1;
+  item.updateQuantity(amountOfItem);
+  inventory.erase(inventory.begin() + itemPosition );
+  inventory.push_back(item);
+  }
 }
 void Player::addItem(Item &item){
- auto findItem = inventory.begin();
- int itemPosition = 0;
- bool addTheItem = true;
- //loops through the inventory and compares the current item to the item that is going to be added, and if the item is found in the inventory, it will delete that item and add an updated item to the inventory or else it will just keep all the values that it was entered in with, if it is not found it will add the item to the inventory while setting the quantity to one
- while(findItem != inventory.end()){
-    copyOfItem = *findItem;
-    if(copyOfItem.getName() == item.getName()){
-      
-      int amountOfItem = item.getQuantity();
-      amountOfItem += 1;
-      item.updateQuantity(amountOfItem);
-      inventory.erase(inventory.begin() + itemPosition);
-      inventory.push_back(item);
-      addTheItem = false;
-      break;
-    }
-     itemPosition++;
-     findItem++;
- }
- // won't add the item if i just put else after the if
- if(addTheItem){
-  item.updateQuantity(1);
-  inventory.push_back(item);
- }
- 
-   
+ bool itemFound = findItem(item, "");
+  if(itemFound){
+   int amountOfItem = item.getQuantity();
+   amountOfItem += 1;
+   item.updateQuantity(amountOfItem);
+   inventory.erase(inventory.begin() + itemPosition);
+   inventory.push_back(item);
+   }
+   else {
+    item.updateQuantity(1);
+    inventory.push_back(item);
+   } 
 }
 void Player::buyItem(int numItems,Item &itemToBuy){
-
   int cost = itemToBuy.getItemPrice() * numItems;
   money -= cost;
   for(int i = 0; i < numItems; i++){
     addItem(itemToBuy);
   }  
 }
-void Player::sellItem(int numItems, Item &itemToSell){
-  auto findItemToSell = inventory.begin();
-  string nameOfItem = itemToSell.getName();
-  while(findItemToSell != inventory.end()){
-    copyOfItem = *findItemToSell;
-    int itemAmount = itemToSell.getQuantity();
-    if(nameOfItem == copyOfItem.getName()){
-    removeItem(itemToSell);
-    money -= numItems; 
-     break;
+void Player::sellItem( Item &itemToSell){
+  bool itemFound = findItem(itemToSell,  "");
+  if(itemFound){
+    int numberOfItems = itemToSell.getQuantity();
+    int numItems;
+    while(true){
+ 
+    cin >> numItems;
+    if(numItems > numberOfItems){
+      cout << "You are trying to sell more of that item than you have, enter another number" << '\n';
     }
-    findItemToSell++;
+    else break;
+    }
+    int gain = itemToSell.getItemPrice();
+    int totalGain = gain * numItems;
+    money += totalGain;
+    for(int i = 0; i < numItems; i++){
+      removeItem(itemToSell);
+    }
   }
 }
 int Player::getMoney(){
