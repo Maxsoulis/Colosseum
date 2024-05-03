@@ -1,7 +1,8 @@
 #include "Item.h"
-Item::Item(string n, int h, int a, int d, int p, int q  ): GameCharacter(n, h, a, d) {
+Item::Item(string n, int h, int a, int d, int p, int q, bool iC  ): GameCharacter(n, h, a, d) {
   price = p;
   quantity = q;
+  isConsumable = iC;
 }
 void Item::printStats(){
   cout << name << '\n';
@@ -22,5 +23,10 @@ int Item::getQuantity(){
 void Item::updateQuantity( int q){
   quantity = q;
 }
+bool Item::getIsConsumable(){
+  return isConsumable;
+}
  
+ 
+
  
