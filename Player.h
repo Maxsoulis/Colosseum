@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "Shop.hpp"
-#include "GameCharacter.hpp"
+#include "Shop.h"
+#include "GameCharacter.h"
 using std::cin;
 class Player : public GameCharacter{
  private:
